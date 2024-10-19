@@ -14,6 +14,13 @@ export type UserName = {
   lastName: string;
 };
 
+export type LocalGuardian = {
+  name: string;
+  occupation: string;
+  contactNo: string;
+  address: string;
+};
+
 // * this is the main
 export type Student = {
   id: string;
@@ -29,4 +36,7 @@ export type Student = {
   presentAddress: string;
   permanentAddress: string;
   guardian: Guardian;
+  localGuardian: LocalGuardian;
+  profileImg?: string;
+  isActive: 'active' | ' inactive';
 };
