@@ -61,20 +61,40 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 // This is the main schema
 export const studentSchema = new Schema<Student>({
   id: { type: String },
-  name: userNameSchema,
+  name: {
+    type: userNameSchema,
+    required: true,
+  },
   //    Mongoss give u to set the type as u want this is call inam
-  gender: ['male', 'female'],
+  gender: {
+    type: String,
+    enum: ['male', 'female', 'other'],
+    required: true,
+  },
   dataOfBirth: { type: String },
   email: { type: String, required: true },
   contactNo: { type: String, required: true },
   emergencyContactNo: { type: String, required: true },
-  bloodGroup: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-  guardian: guardianSchema,
-  localGuardian: localGuardianSchema,
+  bloodGroup: {
+    type: String,
+    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+  },
+  guardian: {
+    type: guardianSchema,
+    required: true,
+  },
+  localGuardian: {
+    type: localGuardianSchema,
+    required: true,
+  },
   profileImg: {
     type: String,
   },
-  isActive: ['active', ' inactive'],
+  isActive: {
+    type: String,
+    enum: ['active', ' inactive'],
+    default: 'active',
+  },
 });
 
 //  TODO : make it correct
