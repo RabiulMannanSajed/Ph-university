@@ -1,19 +1,40 @@
 import { Request, Response } from 'express';
 import { StudentService } from './student.service';
-import { StudentModel } from './student.model';
 
+import Joi, { required } from 'Joi';
+import studentValidationSchema from './student.validation';
 //  This is for create a student
 const createStudent = async (req: Request, res: Response) => {
   try {
     const { student: studentData } = req.body;
-    const result = await StudentService.createStudentIntoDB(studentData);
+    //  here this value is the validate data so send the value in database
+    // this data is validate by JOi
+    const { error, value } = studentValidationSchema.validate(studentData);
+
+    const result = await StudentService.createStudentIntoDB(value);
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Something went wrong',
+        error: error.details,
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Student is create successfully',
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    //! this error will show in the console
+    // console.log(error);
+    //! to show the Error in the postman console
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong ',
+      error: error,
+    });
   }
 };
 
@@ -27,7 +48,14 @@ const getAllStudents = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    //! this error will show in the console
+    // console.log(error);
+    //! to show the Error in the postman console
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong ',
+      error: error,
+    });
   }
 };
 
@@ -42,7 +70,14 @@ const getSingleStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    //! this error will show in the console
+    // console.log(error);
+    //! to show the Error in the postman console
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong ',
+      error: error,
+    });
   }
 };
 

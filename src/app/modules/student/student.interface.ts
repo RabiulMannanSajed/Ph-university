@@ -10,7 +10,7 @@ export type Guardian = {
 
 export type UserName = {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 };
 
@@ -28,7 +28,6 @@ export type Student = {
   //type union letaral
   gender: 'male' | 'female';
   email: string;
-  avatar?: string;
   dataOfBirth: string;
   contactNo: string;
   emergencyContactNo: string;

@@ -8,7 +8,7 @@
 
 * Our Module Pattern is like this <br/>
   → student.interface.ts<br/>
-  → student.route.ts<br/>
   → student.model.ts<br/>
   → student.controller .ts<br/>
   → student.service.ts<br/>
+  → student.route.ts<br/>
