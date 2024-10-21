@@ -28,6 +28,8 @@ const localGuardianValidationSchema = z.object({
 // Define the Zod  for Student
 const studentValidationZodSchema = z.object({
   id: z.string().min(1, 'ID is required'),
+  password: z.string(),
+
   name: userNameValidationSchema,
   gender: z.enum(['male', 'female', 'other']),
   dateOfBirth: z.string().optional(),

@@ -1,13 +1,16 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import {
-  Guardian,
-  LocalGuardian,
-  Student,
-  UserName,
+  StudentMethods,
+  StudentModel,
+  TGuardian,
+  TLocalGuardian,
+  TStudent,
+  TUserName,
 } from './student.interface';
-
-const userNameSchema = new Schema<UserName>({
+import bcrypt from 'bcrypt';
+import config from '../../config';
+const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     trim: true,
@@ -21,7 +24,7 @@ const userNameSchema = new Schema<UserName>({
   },
 });
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
 
@@ -57,7 +60,7 @@ const guardianSchema = new Schema<Guardian>({
   },
 });
 
-const localGuardianSchema = new Schema<LocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
   name: {
     type: String,
     required: [true, 'local Guardian Name is required'],
@@ -77,8 +80,16 @@ const localGuardianSchema = new Schema<LocalGuardian>({
 });
 
 // This is the main schema
-export const studentSchema = new Schema<Student>({
+// this is when  creating instance
+// export const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>(
+
+// This is when use Static
+export const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
+  password: {
+    type: String,
+    required: [true, 'password is required'],
+  },
   name: {
     type: userNameSchema,
     required: true,
@@ -128,6 +139,32 @@ export const studentSchema = new Schema<Student>({
   },
 });
 
-//  TODO : make it correct
+//! pre save middle
+studentSchema.pre('save', async function (next) {
+  // TODO : if u console this 'this' u find the hole data
+  const user = this;
+
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+//! post save middleware
+studentSchema.post('save', function () {});
+
+//creating a custom statics method
+studentSchema.statics.isUserExits = async function (id: string) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
+};
+
+// * this fnc is for check the user exist or not
+
+// studentSchema.methods.isUserExits = async function (id: string) {
+//   const existingUser = await Student.findOne({ id });
+//   return existingUser;
+// };
+
 //  this is the student model
-export const StudentModel = model<Student>('Student', studentSchema);
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);
