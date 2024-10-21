@@ -26,7 +26,7 @@ export type Student = {
   id: string;
   name: UserName;
   //type union letaral
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'other';
   email: string;
   dataOfBirth: string;
   contactNo: string;
@@ -38,4 +38,10 @@ export type Student = {
   localGuardian: LocalGuardian;
   profileImg?: string;
   isActive: 'active' | ' inactive';
+};
+
+//  this part is for to check the user is present in the database
+
+export type StudentMethod = {
+  isUserExits(id: string): Promise<Student>;
 };

@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import {
   Guardian,
@@ -119,6 +119,7 @@ export const studentSchema = new Schema<Student>({
   },
   profileImg: {
     type: String,
+    default: undefined,
   },
   isActive: {
     type: String,
