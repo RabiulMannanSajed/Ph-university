@@ -137,9 +137,13 @@ export const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', ' inactive'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-//! pre save middle
+//! pre save middle before save
 studentSchema.pre('save', async function (next) {
   // TODO : if u console this 'this' u find the hole data
   const user = this;
@@ -150,10 +154,14 @@ studentSchema.pre('save', async function (next) {
   );
   next();
 });
-//! post save middleware
-studentSchema.post('save', function () {});
 
-//creating a custom statics method
+//! post save middleware after save
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  console.log('post hook : we save our data ');
+});
+
+//!creating a custom statics method
 studentSchema.statics.isUserExits = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
@@ -165,6 +173,11 @@ studentSchema.statics.isUserExits = async function (id: string) {
 //   const existingUser = await Student.findOne({ id });
 //   return existingUser;
 // };
+//* Query Middleware
+studentSchema.pre('find', function (next) {
+  // console.log(this);
+  next();
+});
 
 //  this is the student model
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
